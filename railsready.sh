@@ -11,6 +11,15 @@
 shopt -s nocaseglob
 set -e
 
+while getopts "w:" OPTION
+do
+     case $OPTION in
+         w)
+             whichRuby=$OPTARG
+             ;;
+     esac
+done
+
 ruby_version="1.9.3"
 ruby_version_string="1.9.3-p194"
 ruby_source_url="http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p194.tar.gz"
@@ -79,13 +88,17 @@ echo "Make sure you got it from https://github.com/joshfng/railsready"
 # Check if the user has sudo privileges.
 sudo -v >/dev/null 2>&1 || { echo $script_runner has no sudo privileges ; exit 1; }
 
-# Ask if you want to build Ruby or install RVM
-echo -e "\n"
-echo "Build Ruby or install RVM?"
-echo "=> 1. Build from source"
-echo "=> 2. Install RVM"
-echo -n "Select your Ruby type [1 or 2]? "
-read whichRuby
+echo $whichRuby
+
+if [[ ! "$whichRuby" ]] ; then
+  # Ask if you want to build Ruby or install RVM
+  echo -e "\n"
+  echo "Build Ruby or install RVM?"
+  echo "=> 1. Build from source"
+  echo "=> 2. Install RVM"
+  echo -n "Select your Ruby type [1 or 2]? "
+  read whichRuby
+fi
 
 if [ $whichRuby -eq 1 ] ; then
   echo -e "\n\n!!! Set to build Ruby from source and install system wide !!! \n"

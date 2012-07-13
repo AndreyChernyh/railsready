@@ -63,12 +63,6 @@ else
   exit 1
 fi
 
-#now check if user is root
-if [ $script_runner == "root" ] ; then
-  echo -e "\nThis script must be run as a normal user with sudo privileges\n"
-  exit 1
-fi
-
 echo -e "\n\n"
 echo "!!! This script will update your system! Run on a fresh install only !!!"
 echo "run tail -f $log_file in a new terminal to watch the install"
@@ -84,9 +78,6 @@ echo " * Git"
 
 echo -e "\nThis script is always changing."
 echo "Make sure you got it from https://github.com/joshfng/railsready"
-
-# Check if the user has sudo privileges.
-sudo -v >/dev/null 2>&1 || { echo $script_runner has no sudo privileges ; exit 1; }
 
 echo $whichRuby
 
@@ -134,7 +125,7 @@ if [ $whichRuby -eq 1 ] ; then
   echo -e "\n=> Building Ruby $ruby_version_string (this will take a while)..."
   cd  $ruby_source_dir_name && ./configure --prefix=/usr/local >> $log_file 2>&1 \
    && make >> $log_file 2>&1 \
-    && sudo make install >> $log_file 2>&1
+    && make install >> $log_file 2>&1
   echo "==> done..."
 elif [ $whichRuby -eq 2 ] ; then
   #thanks wayneeseguin :)
@@ -188,7 +179,7 @@ echo "==> done..."
 
 echo -e "\n=> Updating Rubygems..."
 if [ $whichRuby -eq 1 ] ; then
-  sudo gem update --system --no-ri --no-rdoc >> $log_file 2>&1
+  gem update --system --no-ri --no-rdoc >> $log_file 2>&1
 elif [ $whichRuby -eq 2 ] ; then
   gem update --system --no-ri --no-rdoc >> $log_file 2>&1
 fi
@@ -196,7 +187,7 @@ echo "==> done..."
 
 echo -e "\n=> Installing Bundler, Passenger and Rails..."
 if [ $whichRuby -eq 1 ] ; then
-  sudo gem install bundler passenger rails --no-ri --no-rdoc >> $log_file 2>&1
+  gem install bundler passenger rails --no-ri --no-rdoc >> $log_file 2>&1
 elif [ $whichRuby -eq 2 ] ; then
   gem install bundler passenger rails --no-ri --no-rdoc >> $log_file 2>&1
 fi
